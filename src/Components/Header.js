@@ -3,7 +3,6 @@ import { FaUser, FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import logo from "../Images/logo_crowdfund.jpg";
 
-
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -17,12 +16,11 @@ const Header = () => {
             <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
                 {/* Logo Section */}
                 <div className="flex items-center space-x-4">
-                <img
-  src={logo} // Using the imported logo variable
-  alt="Logo"
-  className="w-12 h-12 object-cover rounded-full"
-/>
-
+                    <img
+                        src={logo}
+                        alt="Logo"
+                        className="w-12 h-12 object-cover rounded-full"
+                    />
                     <h1 className="text-2xl font-bold text-gray-700 tracking-wide">
                         Crowdfund
                     </h1>
@@ -58,11 +56,13 @@ const Header = () => {
                     >
                         Contact Us
                     </Link>
-                    <button
+                    {/* Updated the button to link to FundraiserForm */}
+                    <Link
+                        to="/start-fundraiser"
                         className="bg-white text-teal-600 px-4 py-2 rounded-full font-bold shadow-md hover:bg-teal-400 hover:text-white transition"
                     >
                         Start a Fundraiser
-                    </button>
+                    </Link>
 
                     {/* Login/Signup Section (Always visible) */}
                     <div className="flex items-center space-x-4">
@@ -90,7 +90,6 @@ const Header = () => {
                         className="flex flex-col space-y-2"
                         aria-label="Toggle mobile menu"
                     >
-                        {/* Hamburger Icon: Three lines */}
                         <div
                             className={`h-1 w-6 bg-teal-500 rounded-lg transition-transform duration-300 ${menuOpen ? "rotate-45 translate-y-2" : ""}`}
                         ></div>
@@ -128,11 +127,12 @@ const Header = () => {
                     >
                         Contact Us
                     </Link>
-                    <button
+                    <Link
+                        to="/FundraiserForm"
                         className="bg-white text-teal-600 px-4 py-2 rounded-full font-bold shadow-md hover:bg-teal-400 hover:text-white"
                     >
                         Start a Fundraiser
-                    </button>
+                    </Link>
                     <div className="flex flex-col space-y-2">
                         <Link
                             to="/login"

@@ -35,17 +35,19 @@ const Signup = () => {
 
   return (
     <div
-      className="flex items-center justify-end min-h-screen pr-8 bg-cover bg-center"
+      className="flex items-center justify-end min-h-screen bg-cover bg-center"
       style={{
         backgroundImage:
           "url('https://images.pexels.com/photos/1111318/pexels-photo-1111318.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
       }}
     >
-      <div className="bg-white bg-opacity-90 p-8 rounded-lg shadow-md w-full max-w-md">
+      {/* Form container */}
+      <div className="bg-white bg-opacity-90 p-8 rounded-lg shadow-md w-full max-w-md mx-8 sm:mx-16 md:mx-32 lg:mx-48 lg:mr-20">
         <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
           Create an Account
         </h2>
 
+        {/* Form */}
         <form onSubmit={handleSubmit}>
           {/* Name Input */}
           <label className="block mb-2 font-semibold text-gray-700" htmlFor="name">
