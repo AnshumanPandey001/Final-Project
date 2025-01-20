@@ -10,6 +10,7 @@ const Signup = () => {
   });
 
   const [error, setError] = useState("");
+  const [validationError, setValidationError] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,10 +18,32 @@ const Signup = () => {
       ...formData,
       [name]: value,
     });
+    setValidationError({ ...validationError, [name]: "" }); // Clear field-specific error on change
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    if (formData.name.trim().length < 3) {
+      errors.name = "Name must be at least 3 characters long.";
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      errors.email = "Invalid email format.";
+    }
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(formData.password)) {
+      errors.password =
+        "Password must be at least 8 characters, include one uppercase letter, one number, and one special character.";
+    }
+    setValidationError(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
     try {
       const response = await axios.post("/api/signup", {
         name: formData.name,
@@ -60,9 +83,14 @@ const Signup = () => {
             value={formData.name}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full px-4 py-2 mb-2 border rounded-lg focus:outline-none focus:ring-2 ${
+              validationError.name ? "border-red-500" : "focus:ring-blue-500"
+            }`}
             placeholder="Enter your full name"
           />
+          {validationError.name && (
+            <p className="text-red-500 text-sm mb-4">{validationError.name}</p>
+          )}
 
           {/* Email Input */}
           <label className="block mb-2 font-semibold text-gray-700" htmlFor="email">
@@ -75,9 +103,14 @@ const Signup = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full px-4 py-2 mb-2 border rounded-lg focus:outline-none focus:ring-2 ${
+              validationError.email ? "border-red-500" : "focus:ring-blue-500"
+            }`}
             placeholder="Enter your email"
           />
+          {validationError.email && (
+            <p className="text-red-500 text-sm mb-4">{validationError.email}</p>
+          )}
 
           {/* Password Input */}
           <label className="block mb-2 font-semibold text-gray-700" htmlFor="password">
@@ -90,9 +123,14 @@ const Signup = () => {
             value={formData.password}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 mb-6 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full px-4 py-2 mb-2 border rounded-lg focus:outline-none focus:ring-2 ${
+              validationError.password ? "border-red-500" : "focus:ring-blue-500"
+            }`}
             placeholder="Enter your password"
           />
+          {validationError.password && (
+            <p className="text-red-500 text-sm mb-4">{validationError.password}</p>
+          )}
 
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 

@@ -3,6 +3,9 @@ import { FaUser, FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import logo from "../Images/logo_crowdfund.jpg";
 
+
+
+
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -39,7 +42,7 @@ const Header = () => {
                 {/* Navigation Section (Desktop and Tablet) */}
                 <nav className="hidden md:flex items-center space-x-6">
                     <Link
-                        to="/"
+                        to="/Home"
                         className="text-gray-700 text-lg font-medium hover:text-teal-600 transition"
                     >
                         Home
@@ -51,7 +54,7 @@ const Header = () => {
                         Donate
                     </Link>
                     <Link
-                        to="/contact"
+                        to="/ContactUs"
                         className="text-gray-700 text-lg font-medium hover:text-teal-600 transition"
                     >
                         Contact Us
@@ -110,7 +113,7 @@ const Header = () => {
             >
                 <div className="flex flex-col px-6 py-4 space-y-4">
                     <Link
-                        to="/"
+                        to="/Home"
                         className="text-gray-700 text-lg font-medium hover:text-teal-600"
                     >
                         Home
@@ -122,7 +125,7 @@ const Header = () => {
                         Donate
                     </Link>
                     <Link
-                        to="/contact"
+                        to="/ContactUs"
                         className="text-gray-700 text-lg font-medium hover:text-teal-600"
                     >
                         Contact Us

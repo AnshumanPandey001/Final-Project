@@ -9,6 +9,7 @@ const Login = () => {
   });
 
   const [error, setError] = useState("");
+  const [validationError, setValidationError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,10 +17,28 @@ const Login = () => {
       ...formData,
       [name]: value,
     });
+    setValidationError(""); // Clear validation error on input change
+  };
+
+  const validateInputs = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      return "Please enter a valid email address.";
+    }
+    if (formData.password.length < 8) {
+      return "Password must be at least 8 characters long.";
+    }
+    return null;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const validationMessage = validateInputs();
+    if (validationMessage) {
+      setValidationError(validationMessage);
+      return;
+    }
+
     try {
       const response = await axios.post("/api/login", {
         email: formData.email,
@@ -39,15 +58,12 @@ const Login = () => {
           "url('https://images.pexels.com/photos/1111318/pexels-photo-1111318.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
       }}
     >
-      {/* Form container */}
       <div className="bg-white bg-opacity-90 p-8 rounded-lg shadow-md w-full max-w-md mx-8 sm:mx-16 md:mx-32 lg:mx-48 lg:mr-20">
         <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
           Login to Your Account
         </h2>
 
-        {/* Form */}
         <form onSubmit={handleSubmit}>
-          {/* Email Input */}
           <label className="block mb-2 font-semibold text-gray-700" htmlFor="email">
             Email
           </label>
@@ -62,7 +78,6 @@ const Login = () => {
             placeholder="Enter your email"
           />
 
-          {/* Password Input */}
           <label className="block mb-2 font-semibold text-gray-700" htmlFor="password">
             Password
           </label>
@@ -77,9 +92,9 @@ const Login = () => {
             placeholder="Enter your password"
           />
 
+          {validationError && <p className="text-red-500 text-sm mb-4">{validationError}</p>}
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
@@ -88,14 +103,12 @@ const Login = () => {
           </button>
         </form>
 
-        {/* OR Divider */}
         <div className="flex items-center justify-center my-4">
           <div className="border-t border-gray-300 w-1/3"></div>
           <p className="mx-2 text-gray-600 text-sm">OR</p>
           <div className="border-t border-gray-300 w-1/3"></div>
         </div>
 
-        {/* Google Login */}
         <button
           className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 flex items-center justify-center"
         >
@@ -110,7 +123,6 @@ const Login = () => {
           Login with Google
         </button>
 
-        {/* Signup Link */}
         <p className="text-center text-sm text-gray-600 mt-4">
           Don't have an account?{" "}
           <Link to="/Signup" className="text-blue-500 hover:underline font-medium">

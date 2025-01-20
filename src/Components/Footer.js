@@ -6,17 +6,17 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 text-center">
         <p>&copy; {new Date().getFullYear()} Fundraise. All rights reserved.</p>
         <p className="text-gray-400 mt-2">Built with ❤️ by Anshuman.</p>
-        <div className="mt-4">
+        <div className="mt-4 space-x-4 flex justify-center flex-wrap">
           <a
             href="#"
-            className="text-gray-400 hover:text-white transition px-4"
+            className="text-gray-400 hover:text-white transition px-4 py-1"
           >
             Privacy Policy
           </a>
-          |
+          <span className="text-gray-400">|</span>
           <a
             href="#"
-            className="text-gray-400 hover:text-white transition px-4"
+            className="text-gray-400 hover:text-white transition px-4 py-1"
           >
             Terms of Service
           </a>
