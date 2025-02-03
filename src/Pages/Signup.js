@@ -45,7 +45,7 @@ const Signup = () => {
     if (!validateForm()) return;
 
     try {
-      const response = await axios.post("/api/signup", {
+      const response = await axios.post("http://localhost:5271/api/Signup", {
         name: formData.name,
         email: formData.email,
         password: formData.password,

@@ -5,7 +5,7 @@ const FundraiserForm = ({ onAddCard }) => {
   const [individualOrGroup, setIndividualOrGroup] = useState(""); // Individual or Group
   const [causeType, setCauseType] = useState(""); // Medical, Education, etc.
   const [formData, setFormData] = useState({
-    displayPhoto: null,
+    displayPhotos: [],
     name: "",
     age: "",
     year: "",
@@ -14,20 +14,30 @@ const FundraiserForm = ({ onAddCard }) => {
     residence: "",
     mobileNumber: "",
     hospitalName: "",
-    location: "",
+    location: "", // <-- Already present
     city: "",
     ailment: "",
-    amount: "",
-    fundraiserName: "",
+    amount: "", // Added amount here
+    fundraiserName: "", // <-- New field
     story: "",
   });
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: files ? files[0] : value,
-    });
+    if (files) {
+      // For handling multiple photos
+      if (name === "displayPhotos") {
+        setFormData({
+          ...formData,
+          displayPhotos: [...formData.displayPhotos, ...Array.from(files)],
+        });
+      }
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -43,11 +53,12 @@ const FundraiserForm = ({ onAddCard }) => {
       onAddCard(newCard);
     }
 
+    // Reset form
     setBeneficiaryType("");
     setIndividualOrGroup("");
     setCauseType("");
     setFormData({
-      displayPhoto: null,
+      displayPhotos: [],
       name: "",
       age: "",
       year: "",
@@ -56,11 +67,11 @@ const FundraiserForm = ({ onAddCard }) => {
       residence: "",
       mobileNumber: "",
       hospitalName: "",
-      location: "",
+      location: "", // Reset location
       city: "",
       ailment: "",
-      amount: "",
-      fundraiserName: "",
+      amount: "", // Reset amount to an empty string
+      fundraiserName: "", // Reset fundraiser name
       story: "",
     });
   };
@@ -76,65 +87,34 @@ const FundraiserForm = ({ onAddCard }) => {
 
       {/* Beneficiary Type */}
       <div className="mb-6">
-  <p className="font-semibold text-lg text-[#14b8a6] text-center">
-    This fundraiser will benefit:
-  </p>
-  <div className="flex flex-col md:flex-row gap-4 mt-4 justify-center items-center">
-    {["Myself", "My Friend", "My Relative"].map((type) => (
-      <label
-        key={type}
-        className="flex items-center text-[#4A4A4A] space-x-2"
-      >
-        <input
-          type="radio"
-          name="beneficiaryType"
-          value={type}
-          checked={beneficiaryType === type}
-          onChange={(e) => setBeneficiaryType(e.target.value)}
-          className="mr-2"
-        />
-        <span>{type}</span>
-      </label>
-    ))}
-  </div>
-</div>
-
-{/* Individual or Group */}
-<div className="mb-6">
-  <p className="font-semibold text-lg text-[#14b8a6] text-center">
-    Is this for an individual or a group?
-  </p>
-  <div className="flex flex-col md:flex-row gap-4 mt-4 justify-center items-center">
-    {["Individual", "Group"].map((option) => (
-      <label
-        key={option}
-        className="flex items-center text-[#4A4A4A] space-x-2"
-      >
-        <input
-          type="radio"
-          name="individualOrGroup"
-          value={option}
-          checked={individualOrGroup === option}
-          onChange={(e) => setIndividualOrGroup(e.target.value)}
-          className="mr-2"
-        />
-        <span>{option}</span>
-      </label>
-    ))}
-  </div>
-</div>
+        <p className="font-semibold text-lg text-[#14b8a6] text-center">
+          This fundraiser will benefit:
+        </p>
+        <div className="flex flex-col md:flex-row gap-4 mt-4 justify-center items-center">
+          {["Myself", "My Friend", "My Relative"].map((type) => (
+            <label key={type} className="flex items-center text-[#4A4A4A] space-x-2">
+              <input
+                type="radio"
+                name="beneficiaryType"
+                value={type}
+                checked={beneficiaryType === type}
+                onChange={(e) => setBeneficiaryType(e.target.value)}
+                className="mr-2"
+              />
+              <span>{type}</span>
+            </label>
+          ))}
+        </div>
+      </div>
 
       {/* Individual or Group */}
       <div className="mb-6">
-        <p className="font-semibold text-lg text-[#14b8a6]">
+        <p className="font-semibold text-lg text-[#14b8a6] text-center">
           Is this for an individual or a group?
         </p>
-        <div className="flex flex-wrap gap-6 mt-4 justify-center">
+        <div className="flex flex-col md:flex-row gap-4 mt-4 justify-center items-center">
           {["Individual", "Group"].map((option) => (
-            <label
-              key={option}
-              className="flex items-center text-[#4A4A4A] space-x-2"
-            >
+            <label key={option} className="flex items-center text-[#4A4A4A] space-x-2">
               <input
                 type="radio"
                 name="individualOrGroup"
@@ -150,22 +130,40 @@ const FundraiserForm = ({ onAddCard }) => {
       </div>
 
       {/* Dynamic Beneficiary Details */}
-      {beneficiaryType === "My Friend" || beneficiaryType === "My Relative" ? (
+      {(beneficiaryType === "My Friend" ||
+        beneficiaryType === "My Relative" ||
+        beneficiaryType === "Myself") && (
         <div className="mb-6">
           <h3 className="font-bold text-xl text-[#14b8a6] mb-4">
             Beneficiary Details
           </h3>
-          {/* Display Photo */}
+          {/* Display Photos */}
           <label className="block text-[#4A4A4A] mb-2">
-            Display Photo
+            Display Photos (Select multiple images)
             <input
               type="file"
-              name="displayPhoto"
+              name="displayPhotos"
+              accept="image/*"
+              multiple
               onChange={handleChange}
               className="block w-full mt-1 p-3 border-2 border-[#14b8a6] rounded-lg focus:ring-2 focus:ring-[#14b8a6] cursor-pointer"
             />
           </label>
-          {/* Additional Fields */}
+
+          {/* Preview of selected images */}
+          <div className="flex flex-wrap gap-4 mt-4">
+            {formData.displayPhotos.map((photo, index) => (
+              <div key={index} className="w-32 h-32 overflow-hidden rounded-lg">
+                <img
+                  src={URL.createObjectURL(photo)}
+                  alt={`Preview ${index}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Additional Fields for "My Relative" */}
           {beneficiaryType === "My Relative" && (
             <label className="block text-[#4A4A4A] mb-2">
               Relationship
@@ -178,6 +176,8 @@ const FundraiserForm = ({ onAddCard }) => {
               />
             </label>
           )}
+
+          {/* Age for All */}
           <label className="block text-[#4A4A4A] mb-2">
             Age
             <input
@@ -189,7 +189,35 @@ const FundraiserForm = ({ onAddCard }) => {
             />
           </label>
         </div>
-      ) : null}
+      )}
+
+      {/* Fundraiser Name (New Input) */}
+      <div className="mb-6">
+        <label className="block text-[#4A4A4A] mb-2">
+          Fundraiser Name
+          <input
+            type="text"
+            name="fundraiserName"
+            value={formData.fundraiserName}
+            onChange={handleChange}
+            className="w-full mt-1 p-3 border-2 border-[#14b8a6] rounded-lg focus:ring-2 focus:ring-[#14b8a6]"
+          />
+        </label>
+      </div>
+
+      {/* Location (New Input) */}
+      <div className="mb-6">
+        <label className="block text-[#4A4A4A] mb-2">
+          Location
+          <input
+            type="text"
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+            className="w-full mt-1 p-3 border-2 border-[#14b8a6] rounded-lg focus:ring-2 focus:ring-[#14b8a6]"
+          />
+        </label>
+      </div>
 
       {/* Cause Details */}
       <div className="mb-6">
@@ -208,6 +236,20 @@ const FundraiserForm = ({ onAddCard }) => {
             <option value="Natural Disaster">Natural Disaster</option>
             <option value="Other">Other</option>
           </select>
+        </label>
+      </div>
+
+      {/* Amount to Raise */}
+      <div className="mb-6">
+        <label className="block text-[#4A4A4A] mb-2">
+          Amount to Raise
+          <input
+            type="number"
+            name="amount"
+            value={formData.amount}
+            onChange={handleChange}
+            className="w-full mt-1 p-3 border-2 border-[#14b8a6] rounded-lg focus:ring-2 focus:ring-[#14b8a6]"
+          />
         </label>
       </div>
 

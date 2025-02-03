@@ -9,7 +9,7 @@ const Login = () => {
   });
 
   const [error, setError] = useState("");
-  const [validationError, setValidationError] = useState("");
+  const [validationError, setValidationError] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,30 +17,28 @@ const Login = () => {
       ...formData,
       [name]: value,
     });
-    setValidationError(""); // Clear validation error on input change
+    setValidationError({ ...validationError, [name]: "" }); // Clear field-specific error on change
   };
 
-  const validateInputs = () => {
+  const validateForm = () => {
+    const errors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      return "Please enter a valid email address.";
+      errors.email = "Invalid email format.";
     }
     if (formData.password.length < 8) {
-      return "Password must be at least 8 characters long.";
+      errors.password = "Password must be at least 8 characters.";
     }
-    return null;
+    setValidationError(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationMessage = validateInputs();
-    if (validationMessage) {
-      setValidationError(validationMessage);
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
-      const response = await axios.post("/api/login", {
+      const response = await axios.post("http://localhost:5271/api/Login", {
         email: formData.email,
         password: formData.password,
       });
@@ -64,6 +62,7 @@ const Login = () => {
         </h2>
 
         <form onSubmit={handleSubmit}>
+          {/* Email Input */}
           <label className="block mb-2 font-semibold text-gray-700" htmlFor="email">
             Email
           </label>
@@ -74,10 +73,16 @@ const Login = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full px-4 py-2 mb-2 border rounded-lg focus:outline-none focus:ring-2 ${
+              validationError.email ? "border-red-500" : "focus:ring-blue-500"
+            }`}
             placeholder="Enter your email"
           />
+          {validationError.email && (
+            <p className="text-red-500 text-sm mb-4">{validationError.email}</p>
+          )}
 
+          {/* Password Input */}
           <label className="block mb-2 font-semibold text-gray-700" htmlFor="password">
             Password
           </label>
@@ -88,11 +93,15 @@ const Login = () => {
             value={formData.password}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 mb-6 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full px-4 py-2 mb-2 border rounded-lg focus:outline-none focus:ring-2 ${
+              validationError.password ? "border-red-500" : "focus:ring-blue-500"
+            }`}
             placeholder="Enter your password"
           />
+          {validationError.password && (
+            <p className="text-red-500 text-sm mb-4">{validationError.password}</p>
+          )}
 
-          {validationError && <p className="text-red-500 text-sm mb-4">{validationError}</p>}
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
           <button
