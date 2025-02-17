@@ -150,20 +150,7 @@ const Signup = () => {
           <div className="border-t border-gray-300 w-1/3"></div>
         </div>
 
-        {/* Google Signup */}
-        <button
-          className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 flex items-center justify-center"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 mr-2"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path d="M22.675 11.861H12.178v2.868h5.925c-.534 2.566-2.774 3.996-5.918 3.996-3.578 0-6.479-2.9-6.479-6.479s2.9-6.479 6.479-6.479c1.498 0 2.869.524 3.946 1.391l2.354-2.354C16.57 2.822 14.503 2 12.178 2 6.5 2 2 6.5 2 12.178s4.5 10.178 10.178 10.178c5.287 0 9.7-4.213 9.7-9.7 0-.43-.044-.857-.121-1.273z" />
-          </svg>
-          Sign Up with Google
-        </button>
+        
 
         {/* Login Link */}
         <p className="text-center text-sm text-gray-600 mt-4">

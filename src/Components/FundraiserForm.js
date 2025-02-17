@@ -14,11 +14,11 @@ const FundraiserForm = ({ onAddCard }) => {
     residence: "",
     mobileNumber: "",
     hospitalName: "",
-    location: "", // <-- Already present
+    location: "",
     city: "",
     ailment: "",
-    amount: "", // Added amount here
-    fundraiserName: "", // <-- New field
+    amount: "",
+    fundraiserName: "",
     story: "",
   });
 
@@ -38,6 +38,16 @@ const FundraiserForm = ({ onAddCard }) => {
         [name]: value,
       });
     }
+  };
+
+  // Handle delete photo
+  const handleDeletePhoto = (index) => {
+    // Remove the photo from the displayPhotos array
+    const updatedPhotos = formData.displayPhotos.filter((_, i) => i !== index);
+    setFormData({
+      ...formData,
+      displayPhotos: updatedPhotos,
+    });
   };
 
   const handleSubmit = (e) => {
@@ -67,11 +77,11 @@ const FundraiserForm = ({ onAddCard }) => {
       residence: "",
       mobileNumber: "",
       hospitalName: "",
-      location: "", // Reset location
+      location: "",
       city: "",
       ailment: "",
-      amount: "", // Reset amount to an empty string
-      fundraiserName: "", // Reset fundraiser name
+      amount: "",
+      fundraiserName: "",
       story: "",
     });
   };
@@ -92,7 +102,10 @@ const FundraiserForm = ({ onAddCard }) => {
         </p>
         <div className="flex flex-col md:flex-row gap-4 mt-4 justify-center items-center">
           {["Myself", "My Friend", "My Relative"].map((type) => (
-            <label key={type} className="flex items-center text-[#4A4A4A] space-x-2">
+            <label
+              key={type}
+              className="flex items-center text-[#4A4A4A] space-x-2"
+            >
               <input
                 type="radio"
                 name="beneficiaryType"
@@ -114,7 +127,10 @@ const FundraiserForm = ({ onAddCard }) => {
         </p>
         <div className="flex flex-col md:flex-row gap-4 mt-4 justify-center items-center">
           {["Individual", "Group"].map((option) => (
-            <label key={option} className="flex items-center text-[#4A4A4A] space-x-2">
+            <label
+              key={option}
+              className="flex items-center text-[#4A4A4A] space-x-2"
+            >
               <input
                 type="radio"
                 name="individualOrGroup"
@@ -151,18 +167,27 @@ const FundraiserForm = ({ onAddCard }) => {
           </label>
 
           {/* Preview of selected images */}
-          <div className="flex flex-wrap gap-4 mt-4">
+          <div className="flex flex-wrap gap-4 mt-4 justify-center">
             {formData.displayPhotos.map((photo, index) => (
-              <div key={index} className="w-32 h-32 overflow-hidden rounded-lg">
+              <div key={index} className="relative w-32 h-32 overflow-hidden rounded-lg">
                 <img
                   src={URL.createObjectURL(photo)}
                   alt={`Preview ${index}`}
                   className="w-full h-full object-cover"
                 />
+                
+                {/* Delete button */}
+                <button
+                  type="button"
+                  onClick={() => handleDeletePhoto(index)}
+                  className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full focus:outline-none hover:bg-red-600"
+                >
+                  ✖
+                </button>
               </div>
             ))}
           </div>
-
+          
           {/* Additional Fields for "My Relative" */}
           {beneficiaryType === "My Relative" && (
             <label className="block text-[#4A4A4A] mb-2">
@@ -191,7 +216,7 @@ const FundraiserForm = ({ onAddCard }) => {
         </div>
       )}
 
-      {/* Fundraiser Name (New Input) */}
+      {/* Fundraiser Name */}
       <div className="mb-6">
         <label className="block text-[#4A4A4A] mb-2">
           Fundraiser Name
@@ -205,7 +230,7 @@ const FundraiserForm = ({ onAddCard }) => {
         </label>
       </div>
 
-      {/* Location (New Input) */}
+      {/* Location */}
       <div className="mb-6">
         <label className="block text-[#4A4A4A] mb-2">
           Location
@@ -219,7 +244,7 @@ const FundraiserForm = ({ onAddCard }) => {
         </label>
       </div>
 
-      {/* Cause Details */}
+      {/* Cause Type */}
       <div className="mb-6">
         <h3 className="font-bold text-xl text-[#14b8a6] mb-4">Cause Details</h3>
         <label className="block text-[#4A4A4A] mb-2">

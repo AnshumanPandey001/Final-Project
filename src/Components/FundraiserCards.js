@@ -1,20 +1,48 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const FundraiserCards = ({ cards }) => {
+  const [imageIndices, setImageIndices] = useState([]);
+
+  useEffect(() => {
+    if (!cards.length) return; // Prevent running if no cards are available
+
+    // Initialize indices to 0 for each card
+    setImageIndices(cards.map(() => 0));
+
+    const intervals = cards.map((card, index) => {
+      if (card.displayPhotos.length > 1) {
+        return setInterval(() => {
+          setImageIndices((prev) => {
+            const newIndices = [...prev];
+            newIndices[index] = (newIndices[index] + 1) % card.displayPhotos.length;
+            return newIndices;
+          });
+        }, 2000);
+      }
+      return null;
+    });
+
+    return () => {
+      intervals.forEach((id) => id && clearInterval(id));
+    };
+  }, [cards]);
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 p-6">
       {cards.map((card, index) => (
         <Link
-          to={`/fundraiser-details/${index}`} // Routes to details page
-          key={index}
+          to={`/fundraiser-details/${card.id || index}`}
+          key={card.id || index}
           className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-500 hover:scale-105 hover:shadow-2xl"
         >
           <div className="relative">
-            {/* Display image(s) */}
-            {card.displayPhotos.length > 0 ? (
+            {/* Ensure images exist before rendering */}
+            {card.displayPhotos.length > 0 && imageIndices.length > index ? (
               <img
-                src={URL.createObjectURL(card.displayPhotos[0])}
+                src={typeof card.displayPhotos[imageIndices[index]] === "string" 
+                  ? card.displayPhotos[imageIndices[index]] 
+                  : URL.createObjectURL(card.displayPhotos[imageIndices[index]])} 
                 alt="Fundraiser"
                 className="w-full h-64 object-cover rounded-t-xl"
               />
@@ -24,7 +52,7 @@ const FundraiserCards = ({ cards }) => {
               </div>
             )}
 
-            {/* Overlay with amount to raise */}
+            {/* Overlay with fundraiser details */}
             <div className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-t from-black to-transparent p-4">
               <h3 className="text-white font-semibold text-lg truncate">{card.fundraiserName}</h3>
               <p className="text-white text-sm mt-1">{card.causeType}</p>

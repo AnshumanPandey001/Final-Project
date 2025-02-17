@@ -6,7 +6,7 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 const NextArrow = ({ onClick }) => (
   <div
     onClick={onClick}
-    className="absolute top-1/2 right-4 transform -translate-y-1/2 text-white bg-[#14b8a6] p-2 rounded-full shadow-lg cursor-pointer z-10"
+    className="absolute top-1/2 right-4 transform -translate-y-1/2 text-white bg-[#14b8a6] p-2 rounded-full shadow-lg cursor-pointer"
   >
     <FaArrowRight />
   </div>
@@ -15,7 +15,7 @@ const NextArrow = ({ onClick }) => (
 const PrevArrow = ({ onClick }) => (
   <div
     onClick={onClick}
-    className="absolute top-1/2 left-4 transform -translate-y-1/2 text-white bg-[#14b8a6] p-2 rounded-full shadow-lg cursor-pointer z-10"
+    className="absolute top-1/2 left-4 transform -translate-y-1/2 text-white bg-[#14b8a6] p-2 rounded-full shadow-lg cursor-pointer"
   >
     <FaArrowLeft />
   </div>
@@ -30,31 +30,29 @@ const ImageSlider = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 2000,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
   };
 
-  // Example image data
+  // Placeholder image links
   const images = [
-    "https://images.pexels.com/photos/28539583/pexels-photo-28539583/free-photo-of-majestic-mountain-peaks-at-sunrise.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    "https://via.placeholder.com/1200x600?text=Slide+2",
-    "https://via.placeholder.com/1200x600?text=Slide+3",
+    "https://images.pexels.com/photos/29421579/pexels-photo-29421579.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "https://images.pexels.com/photos/29421578/pexels-photo-29421578.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    "https://images.pexels.com/photos/29421577/pexels-photo-29421577.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
   ];
 
   return (
-    <div className="w-full max-w-4xl mx-auto mt-10">
+    <div className="w-full max-w-2xl mx-auto mt-6 overflow-hidden">
+      {/* Slider container */}
       <Slider {...settings}>
         {images.map((image, index) => (
           <div key={index} className="relative">
             <img
               src={image}
               alt={`Slide ${index + 1}`}
-              className="w-full rounded-lg shadow-lg"
+              className="w-full h-56 object-cover rounded-lg shadow-lg"
             />
-            <div className="absolute bottom-4 left-4 text-white text-xl font-semibold bg-[#14b8a6] bg-opacity-70 px-4 py-2 rounded-lg">
-              Slide {index + 1}
-            </div>
           </div>
         ))}
       </Slider>

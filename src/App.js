@@ -10,6 +10,10 @@ import FundraiserForm from "./Components/FundraiserForm";
 import ContactUs from './Pages/ContactUs';
 import Donate from "./Pages/Donate";
 import Home from "./Pages/Home";
+import TeamPage from "./Pages/TeamPage";
+import AboutUs from "./Pages/AboutUs";
+
+
 
 const App = () => {
   const [cards, setCards] = useState([]); // Centralized state for fundraiser cards
@@ -25,7 +29,8 @@ const App = () => {
       <div className="main-content">
         <Routes>
           {/* Default route should be Home */}
-          <Route path="/home" element={<Home cards={cards} />} />
+          <Route path="/Home" element={<Home cards={cards} />} />
+         
 
           {/* Route to display fundraiser cards */}
           <Route path="/fundraiserCards" element={<FundraiserCards cards={cards} />} />
@@ -44,6 +49,8 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/contactUs" element={<ContactUs />} />
           <Route path="/donate" element={<Donate />} />
+          <Route path="/TeamPage" element={<TeamPage/>} />
+          <Route path="/AboutUS" element={<AboutUs/>} />
         </Routes>
       </div>
       <Footer />
