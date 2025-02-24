@@ -19,6 +19,7 @@ const FundraiserForm = ({ onAddCard }) => {
     ailment: "",
     amount: "",
     fundraiserName: "",
+    beneficiaryName: "", // Fixed naming to camelCase
     story: "",
   });
 
@@ -42,7 +43,6 @@ const FundraiserForm = ({ onAddCard }) => {
 
   // Handle delete photo
   const handleDeletePhoto = (index) => {
-    // Remove the photo from the displayPhotos array
     const updatedPhotos = formData.displayPhotos.filter((_, i) => i !== index);
     setFormData({
       ...formData,
@@ -63,7 +63,7 @@ const FundraiserForm = ({ onAddCard }) => {
       onAddCard(newCard);
     }
 
-    // Reset form
+    // Reset form after submission
     setBeneficiaryType("");
     setIndividualOrGroup("");
     setCauseType("");
@@ -81,6 +81,7 @@ const FundraiserForm = ({ onAddCard }) => {
       city: "",
       ailment: "",
       amount: "",
+      beneficiaryName: "", // Reset
       fundraiserName: "",
       story: "",
     });
@@ -187,7 +188,7 @@ const FundraiserForm = ({ onAddCard }) => {
               </div>
             ))}
           </div>
-          
+
           {/* Additional Fields for "My Relative" */}
           {beneficiaryType === "My Relative" && (
             <label className="block text-[#4A4A4A] mb-2">
@@ -224,6 +225,20 @@ const FundraiserForm = ({ onAddCard }) => {
             type="text"
             name="fundraiserName"
             value={formData.fundraiserName}
+            onChange={handleChange}
+            className="w-full mt-1 p-3 border-2 border-[#14b8a6] rounded-lg focus:ring-2 focus:ring-[#14b8a6]"
+          />
+        </label>
+      </div>
+      
+      {/* Beneficiary Name */}
+      <div className="mb-6">
+        <label className="block text-[#4A4A4A] mb-2">
+          Beneficiary Name
+          <input
+            type="text"
+            name="beneficiaryName"
+            value={formData.beneficiaryName}
             onChange={handleChange}
             className="w-full mt-1 p-3 border-2 border-[#14b8a6] rounded-lg focus:ring-2 focus:ring-[#14b8a6]"
           />

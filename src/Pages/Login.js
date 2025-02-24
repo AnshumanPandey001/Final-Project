@@ -1,6 +1,9 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
+import { Eye, EyeOff } from "lucide-react";
+// import { UserContext } from "../context/UserContext"; // Import context for updating user state
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +13,10 @@ const Login = () => {
 
   const [error, setError] = useState("");
   const [validationError, setValidationError] = useState({});
+  const [successMessage, setSuccessMessage] = useState(""); // For login success
+  const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
+  // const { setUserName } = useContext(UserContext); // Use context to update header username
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,7 +24,7 @@ const Login = () => {
       ...formData,
       [name]: value,
     });
-    setValidationError({ ...validationError, [name]: "" }); // Clear field-specific error on change
+    setValidationError({ ...validationError, [name]: "" });
   };
 
   const validateForm = () => {
@@ -42,88 +49,82 @@ const Login = () => {
         email: formData.email,
         password: formData.password,
       });
-      alert(response.data.message);
+
+      // Save user name in localStorage for Header display
+      localStorage.setItem("userName", response.data.userName);
+      // setUserName(response.data.userName); // Update context to reflect in Header
+      
+      // Show success message with animation
+      setSuccessMessage("Login Successful! Redirecting...");
+      setTimeout(() => {
+        navigate("/Home"); // Redirect to home after success
+      }, 2000);
     } catch (err) {
       setError(err.response?.data?.message || "Error during login");
     }
   };
 
   return (
-    <div
-      className="flex items-center justify-end min-h-screen bg-cover bg-center"
-      style={{
-        backgroundImage:
-          "url('https://images.pexels.com/photos/1111318/pexels-photo-1111318.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
-      }}
-    >
-      <div className="bg-white bg-opacity-90 p-8 rounded-lg shadow-md w-full max-w-md mx-8 sm:mx-16 md:mx-32 lg:mx-48 lg:mr-20">
+    <div className="flex items-center justify-end min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('https://images.pexels.com/photos/1111318/pexels-photo-1111318.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')" }}>
+      
+      {/* Animated Success Message */}
+      {successMessage && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="fixed top-5 right-5 bg-green-500 text-white px-4 py-2 rounded-lg shadow-md"
+        >
+          {successMessage}
+        </motion.div>
+      )}
+
+      <div className="bg-white bg-opacity-90 p-8 rounded-lg shadow-md w-full max-w-md mx-8">
         <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
           Login to Your Account
         </h2>
 
         <form onSubmit={handleSubmit}>
-          {/* Email Input */}
-          <label className="block mb-2 font-semibold text-gray-700" htmlFor="email">
-            Email
-          </label>
+          <label className="block mb-2 font-semibold text-gray-700">Email</label>
           <input
-            id="email"
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             required
-            className={`w-full px-4 py-2 mb-2 border rounded-lg focus:outline-none focus:ring-2 ${
-              validationError.email ? "border-red-500" : "focus:ring-blue-500"
-            }`}
+            className="w-full px-4 py-2 mb-2 border rounded-lg focus:ring-blue-500"
             placeholder="Enter your email"
           />
-          {validationError.email && (
-            <p className="text-red-500 text-sm mb-4">{validationError.email}</p>
-          )}
+          {validationError.email && <p className="text-red-500 text-sm mb-4">{validationError.email}</p>}
 
-          {/* Password Input */}
-          <label className="block mb-2 font-semibold text-gray-700" htmlFor="password">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            className={`w-full px-4 py-2 mb-2 border rounded-lg focus:outline-none focus:ring-2 ${
-              validationError.password ? "border-red-500" : "focus:ring-blue-500"
-            }`}
-            placeholder="Enter your password"
-          />
-          {validationError.password && (
-            <p className="text-red-500 text-sm mb-4">{validationError.password}</p>
-          )}
+          <label className="block mb-2 font-semibold text-gray-700">Password</label>
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-2 mb-2 border rounded-lg focus:ring-blue-500"
+              placeholder="Enter your password"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-2 text-gray-500"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+          {validationError.password && <p className="text-red-500 text-sm mb-4">{validationError.password}</p>}
 
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
-          <button
-            type="submit"
-            className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-          >
+          <button type="submit" className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
             Login
           </button>
         </form>
-
-        <div className="flex items-center justify-center my-4">
-          <div className="border-t border-gray-300 w-1/3"></div>
-          <p className="mx-2 text-gray-600 text-sm">OR</p>
-          <div className="border-t border-gray-300 w-1/3"></div>
-        </div>
-
-        <p className="text-center text-sm text-gray-600 mt-4">
-          Don't have an account?{" "}
-          <Link to="/Signup" className="text-blue-500 hover:underline font-medium">
-            Sign Up
-          </Link>
-        </p>
       </div>
     </div>
   );

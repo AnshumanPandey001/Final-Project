@@ -5,28 +5,33 @@ import logo from "../Images/logo_crowdfund.jpg";
 
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [userName, setUserName] = useState(""); // To store logged-in username
+    const [userName, setUserName] = useState(""); 
     const navigate = useNavigate();
-    const location = useLocation(); // To get the current route
+    const location = useLocation(); 
 
     // Function to toggle the menu visibility
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
     };
 
-    // Check if the user is logged in
+    // Update username when localStorage changes
     useEffect(() => {
-        const storedUser = localStorage.getItem("userName");
-        if (storedUser) {
-            setUserName(storedUser);
-        }
+        const updateUser = () => {
+            setUserName(localStorage.getItem("userName") || "");
+        };
+
+        window.addEventListener("storage", updateUser);
+        updateUser(); // Initial check
+
+        return () => window.removeEventListener("storage", updateUser);
     }, []);
 
     // Logout function
     const handleLogout = () => {
-        localStorage.removeItem("userName"); // Remove user data
-        setUserName(""); // Reset state
-        navigate("/login"); // Redirect to login page
+        localStorage.removeItem("userName");
+        setUserName(""); 
+        window.dispatchEvent(new Event("storage")); // Notify all components
+        navigate("/login");
     };
 
     // Function to dynamically apply active class based on the current page
@@ -51,7 +56,7 @@ const Header = () => {
                     </h1>
                 </div>
 
-                {/* Search Bar (Hidden on small screens) */}
+                {/* Search Bar */}
                 <div className="relative flex-1 mx-6 hidden md:block">
                     <input
                         type="text"
@@ -61,7 +66,7 @@ const Header = () => {
                     <FaSearch className="absolute top-2 right-4 text-gray-500 text-xl" />
                 </div>
 
-                {/* Navigation Section (Desktop and Tablet) */}
+                {/* Navigation */}
                 <nav className="hidden md:flex items-center space-x-6">
                     <Link to="/Home" className={`text-lg font-medium transition ${getLinkClass("/Home")}`}>
                         Home
@@ -104,7 +109,7 @@ const Header = () => {
                     )}
                 </nav>
 
-                {/* Mobile Menu Button (Hamburger Icon) */}
+                {/* Mobile Menu Button */}
                 <div className="md:hidden flex items-center ml-4">
                     <button onClick={toggleMenu} className="flex flex-col space-y-2" aria-label="Toggle mobile menu">
                         <div className={`h-1 w-6 bg-teal-500 rounded-lg transition-transform duration-300 ${menuOpen ? "rotate-45 translate-y-2" : ""}`}></div>
@@ -114,7 +119,7 @@ const Header = () => {
                 </div>
             </div>
 
-            {/* Mobile Menu (when Hamburger is clicked) */}
+            {/* Mobile Menu */}
             {menuOpen && (
                 <div className="md:hidden bg-ivory p-4 space-y-4">
                     <Link to="/Home" className={`block text-lg transition ${getLinkClass("/Home")}`} onClick={() => setMenuOpen(false)}>
@@ -132,20 +137,19 @@ const Header = () => {
 
                     {/* If user is logged in, show Name and Logout button */}
                     {userName ? (
-                        <div className="flex items-center space-x-4">
+                        <div className="flex flex-col space-y-2">
                             <span className="text-gray-700 text-lg font-medium">
                                 Welcome, {userName}
                             </span>
                             <button
-                                onClick={handleLogout}
+                                onClick={() => { handleLogout(); setMenuOpen(false); }}
                                 className="bg-red-500 text-white px-3 py-2 rounded-full shadow-md hover:bg-red-600 transition"
                             >
                                 Logout
                             </button>
                         </div>
                     ) : (
-                        // Show Login/Signup buttons if user is not logged in
-                        <div className="flex items-center space-x-4">
+                        <div className="flex flex-col space-y-2">
                             <Link to="/login" className="flex items-center bg-teal-400 text-white px-3 py-2 rounded-full shadow-md hover:bg-teal-500 transition" onClick={() => setMenuOpen(false)}>
                                 <FaUser className="mr-2" />
                                 Login

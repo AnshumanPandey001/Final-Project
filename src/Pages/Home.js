@@ -3,9 +3,6 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate
 import FundraiserCards from "../Components/FundraiserCards"; 
 import ReviewSection from "./Review";
 
-
-
-
 const images = [
   "https://images.pexels.com/photos/29421579/pexels-photo-29421579.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
   "https://img.freepik.com/free-photo/health-insurance-copyspace-background-idea-concept_1421-81.jpg?t=st=1738909392~exp=1738912992~hmac=b0da182aaa06c08e396fba6de3b4655a02c2b945fbf8ee778795e73a67ff2413&w=900",
@@ -84,6 +81,14 @@ const Home = ({ cards }) => {
 
       {/* Fundraiser Cards Section */}
       <section className="py-12 bg-white shadow-lg">
+         {/* Search Box for Mobile View */}
+      <div className="block sm:hidden py-4 px-6 bg-white shadow-lg mb-8">
+        <input
+          type="text"
+          placeholder="Search Fundraisers..."
+          className="w-full px-4 py-2 border rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-[#1963A0]"
+        />
+      </div>
         <h2 className="text-3xl font-semibold text-center text-[#1963A0] mb-8">
           Explore Fundraisers
         </h2>
@@ -92,7 +97,9 @@ const Home = ({ cards }) => {
           <FundraiserCards cards={cards} />
         </div>
       </section>
-      <ReviewSection/>
+      
+      {/* Review Section */}
+      <ReviewSection />
     </div>
   );
 };

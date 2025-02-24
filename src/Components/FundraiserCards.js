@@ -55,6 +55,7 @@ const FundraiserCards = ({ cards }) => {
             {/* Overlay with fundraiser details */}
             <div className="absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-t from-black to-transparent p-4">
               <h3 className="text-white font-semibold text-lg truncate">{card.fundraiserName}</h3>
+              <h3 className="text-white font-semibold text-lg truncate">{card.BeneficiaryName}</h3>
               <p className="text-white text-sm mt-1">{card.causeType}</p>
               <p className="text-white text-lg mt-2 font-bold">${card.amount}</p>
             </div>

@@ -4,9 +4,24 @@ import { useParams, useNavigate } from "react-router-dom";
 const FundraiserDetails = ({ cards }) => {
   const { index } = useParams();
   const navigate = useNavigate();
-  const fundraiser = cards[index];
-
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // ✅ Fix: fundraiser abhi yahan fetch karo, `if (!fundraiser)` ke andar nahi
+  const fundraiser = cards[index] || null;
+
+  const images = fundraiser?.displayPhotos || [];
+  const imagesLength = images.length;
+
+  // ✅ Fix: Hook hamesha same order me chalega, koi bhi if/return ke andar nahi hai
+  useEffect(() => {
+    if (imagesLength <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imagesLength);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [imagesLength]); // ✅ Dependency correct hai
 
   if (!fundraiser) {
     return (
@@ -22,36 +37,12 @@ const FundraiserDetails = ({ cards }) => {
     );
   }
 
-  const imagesLength = fundraiser.displayPhotos.length;
-
-  // ✅ Fix: Always call useEffect in the same order
-  useEffect(() => {
-    let interval;
-    // Only start interval if there are multiple images
-    if (imagesLength > 1) {
-      interval = setInterval(() => {
-        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imagesLength);
-      }, 2000); // Auto-switch images every 2 seconds
-    }
-
-    // Cleanup interval on unmount or when imagesLength changes
-    return () => clearInterval(interval);
-  }, [imagesLength]); // Depend only on imagesLength
-
-  const nextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imagesLength);
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + imagesLength) % imagesLength);
-  };
+  const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % imagesLength);
+  const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + imagesLength) % imagesLength);
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <button
-        onClick={() => navigate("/home")}
-        className="text-[#1963A0] mb-4"
-      >
+      <button onClick={() => navigate("/home")} className="text-[#1963A0] mb-4">
         &larr; Back to Home
       </button>
 
@@ -60,26 +51,19 @@ const FundraiserDetails = ({ cards }) => {
         {imagesLength > 0 ? (
           <>
             <img
-              src={typeof fundraiser.displayPhotos[currentImageIndex] === "string"
-                ? fundraiser.displayPhotos[currentImageIndex]
-                : URL.createObjectURL(fundraiser.displayPhotos[currentImageIndex])}
+              src={typeof images[currentImageIndex] === "string"
+                ? images[currentImageIndex]
+                : URL.createObjectURL(images[currentImageIndex])}
               alt="Fundraiser"
               className="w-full h-72 object-cover rounded-lg transition-opacity duration-500 ease-in-out"
             />
 
-            {/* Navigation Buttons (Show only if multiple images) */}
             {imagesLength > 1 && (
               <>
-                <button
-                  onClick={prevImage}
-                  className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
-                >
+                <button onClick={prevImage} className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
                   &#9664;
                 </button>
-                <button
-                  onClick={nextImage}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full"
-                >
+                <button onClick={nextImage} className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full">
                   &#9654;
                 </button>
               </>
@@ -95,25 +79,14 @@ const FundraiserDetails = ({ cards }) => {
       <h2 className="text-3xl font-bold mt-6">{fundraiser.fundraiserName}</h2>
       <p className="text-lg text-[#14b8a6] mt-2">{fundraiser.causeType}</p>
 
-      {/* Fundraiser details */}
-      <div className="mt-6">
-        <p className="font-semibold mt-4">Fundraiser Name:</p>
-        <p>{fundraiser.fundraiserName}</p>
-
-        <p className="font-semibold mt-4">Beneficiary Name:</p>
-        <p>{fundraiser.name}</p>
-
-        <p className="font-semibold mt-4">Age:</p>
-        <p>{fundraiser.age}</p>
-
-        <p className="font-semibold mt-4">Location:</p>
-        <p>{fundraiser.location}</p>
-
-        <p className="font-semibold mt-4">Amount Raised:</p>
-        <p>${fundraiser.amount}</p>
-
-        <p className="font-semibold mt-4">Story:</p>
-        <p>{fundraiser.story}</p>
+      {/* Fundraiser Details */}
+      <div className="mt-6 space-y-4">
+        <p><span className="font-semibold">Fundraiser Name:</span> {fundraiser.fundraiserName || "N/A"}</p>
+        <p><span className="font-semibold">Beneficiary Name:</span> {fundraiser.beneficiaryName || "N/A"}</p>
+        <p><span className="font-semibold">Age:</span> {fundraiser.age || "N/A"}</p>
+        <p><span className="font-semibold">Location:</span> {fundraiser.location || "N/A"}</p>
+        <p><span className="font-semibold">Amount Raised:</span> ${fundraiser.amount || "0"}</p>
+        <p><span className="font-semibold">Story:</span> {fundraiser.story || "No story available."}</p>
       </div>
     </div>
   );

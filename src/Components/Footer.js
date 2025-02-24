@@ -1,9 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram, FaYoutube } from "react-icons/fa";
 import ReviewSection from "../Pages/Review";
 
 const Footer = () => {
+  const navigate = useNavigate(); // Initialize useNavigate
   return (
     <footer className="bg-gray-800 text-white py-8">
       <div className="max-w-7xl mx-auto px-4 text-center">
@@ -47,7 +49,8 @@ const Footer = () => {
 
         {/* Call to Action */}
         <div className="mt-6">
-          <button className="bg-red-600 px-6 py-2 rounded-full font-bold">
+          <button onClick={() => navigate("/start-fundraiser")}
+            className="bg-red-600 px-6 py-2 rounded-full font-bold">
             Start a fundraiser
           </button>
         </div>
@@ -56,7 +59,7 @@ const Footer = () => {
         <div className="mt-4 flex justify-center space-x-4">
           <a href="#" className="text-gray-400 hover:text-white transition">Pricing</a>
           <span className="text-gray-400">|</span>
-          <Link to="/Review" className="text-gray-400 hover:text-white transition">Reviews</Link>
+          <Link to="/ReviewSection" className="text-gray-400 hover:text-white transition">Reviews</Link>
           <span className="text-gray-400">|</span>
           <a href="#" className="text-gray-400 hover:text-white transition">FAQs and Tips</a>
         </div>

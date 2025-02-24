@@ -1,8 +1,9 @@
 import React from "react";
+import introVideo from '../Images/intro-video.mp4';
 
 const teamMembers = [
   { name: "Anshuman Pandey", image: "https://media.licdn.com/dms/image/v2/D4D03AQG1CqAXT22LPw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1714823551341?e=1745452800&v=beta&t=WVJEq1oW4TkfOE3jclqPXDqElMEmc1uJtnS77cFPJpo" },
-  
+
 ];
 
 const TeamPage = () => {
@@ -10,17 +11,17 @@ const TeamPage = () => {
     <div className="p-8 max-w-6xl mx-auto text-center">
       <h2 className="text-2xl font-bold">Hear it from our team on what Crowdfund means to them.</h2>
       <p className="text-gray-600 mt-2">
-       Astrong team of employees who impact lives with the smallest of things we do within the organization.
+        Astrong team of employees who impact lives with the smallest of things we do within the organization.
       </p>
 
       <div className="mt-8 flex justify-center">
         <div className="w-full max-w-xl">
-        {/* <div className="md:w-1/2 p-6 flex justify-center"> */}
-          <video controls autoPlay className="w-full rounded-lg shadow-lg border border-gray-300">
-            <source src="/video.mp4" type="video/mp4" />
+          {/* <div className="md:w-1/2 p-6 flex justify-center"> */}
+          <video loop autoPlay className="w-full rounded-lg shadow-lg border border-gray-300">
+            <source src={introVideo} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
-        {/* </div> */}
+          {/* </div> */}
         </div>
       </div>
 
