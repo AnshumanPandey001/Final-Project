@@ -45,25 +45,26 @@ const Login = () => {
     if (!validateForm()) return;
 
     try {
-      const response = await axios.post("http://localhost:5271/api/Login", {
-        email: formData.email,
-        password: formData.password,
-      });
+        const response = await axios.post("http://localhost:5271/api/Login", {
+            email: formData.email,
+            password: formData.password,
+        });
 
-      // Save user name in localStorage for Header display
-      localStorage.setItem("userName", response.data.userName);
-      // setUserName(response.data.userName); // Update context to reflect in Header
-      
-      // Show success message with animation
-      setSuccessMessage("Login Successful! Redirecting...");
-      setTimeout(() => {
-        navigate("/Home"); // Redirect to home after success
-      }, 2000);
+        // Save user name in localStorage
+        localStorage.setItem("userName", response.data.userName);
+
+        // Dispatch event to notify header
+        window.dispatchEvent(new Event("userLoggedIn"));
+
+        // Show success message with animation
+        setSuccessMessage("Login Successful! Redirecting...");
+        setTimeout(() => {
+            navigate("/Home"); // Redirect after success
+        }, 2000);
     } catch (err) {
-      setError(err.response?.data?.message || "Error during login");
+        setError(err.response?.data?.message || "Error during login");
     }
-  };
-
+};
   return (
     <div className="flex items-center justify-end min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('https://images.pexels.com/photos/1111318/pexels-photo-1111318.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')" }}>

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { Eye, EyeOff } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +13,8 @@ const Signup = () => {
 
   const [error, setError] = useState("");
   const [validationError, setValidationError] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,119 +49,83 @@ const Signup = () => {
     if (!validateForm()) return;
 
     try {
-      const response = await axios.post("http://localhost:5271/api/Signup", {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-      });
-      alert(response.data.message);
+      const response = await axios.post("http://localhost:5271/api/Signup", formData);
+      setSuccessMessage(response.data.message || "Register Successful!!");
+      setFormData({ name: "", email: "", password: "" });
     } catch (err) {
       setError(err.response?.data?.message || "Error during signup");
     }
   };
 
   return (
-    <div
-      className="flex items-center justify-end min-h-screen bg-cover bg-center"
-      style={{
-        backgroundImage:
-          "url('https://images.pexels.com/photos/1111318/pexels-photo-1111318.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
-      }}
-    >
-      {/* Form container */}
-      <div className="bg-white bg-opacity-90 p-8 rounded-lg shadow-md w-full max-w-md mx-8 sm:mx-16 md:mx-32 lg:mx-48 lg:mr-20">
-        <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
-          Create an Account
-        </h2>
+    <div className="flex items-center justify-end min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('https://images.pexels.com/photos/1111318/pexels-photo-1111318.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')" }}>
+      <div className="bg-white bg-opacity-90 p-8 rounded-lg shadow-md w-full max-w-md mr-12">
+        <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">Create an Account</h2>
 
-        {/* Form */}
+        {successMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="mb-4 text-green-600 font-semibold text-center"
+          >
+            {successMessage}
+          </motion.div>
+        )}
+
         <form onSubmit={handleSubmit}>
-          {/* Name Input */}
-          <label className="block mb-2 font-semibold text-gray-700" htmlFor="name">
-            Full Name
-          </label>
+          <label className="block mb-2 font-semibold text-gray-700">Full Name</label>
           <input
-            id="name"
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            required
-            className={`w-full px-4 py-2 mb-2 border rounded-lg focus:outline-none focus:ring-2 ${
-              validationError.name ? "border-red-500" : "focus:ring-blue-500"
-            }`}
+            className={`w-full px-4 py-2 mb-2 border rounded-lg focus:ring-2 ${validationError.name ? "border-red-500" : "focus:ring-blue-500"}`}
             placeholder="Enter your full name"
           />
-          {validationError.name && (
-            <p className="text-red-500 text-sm mb-4">{validationError.name}</p>
-          )}
+          {validationError.name && <p className="text-red-500 text-sm mb-4">{validationError.name}</p>}
 
-          {/* Email Input */}
-          <label className="block mb-2 font-semibold text-gray-700" htmlFor="email">
-            Email
-          </label>
+          <label className="block mb-2 font-semibold text-gray-700">Email</label>
           <input
-            id="email"
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            required
-            className={`w-full px-4 py-2 mb-2 border rounded-lg focus:outline-none focus:ring-2 ${
-              validationError.email ? "border-red-500" : "focus:ring-blue-500"
-            }`}
+            className={`w-full px-4 py-2 mb-2 border rounded-lg focus:ring-2 ${validationError.email ? "border-red-500" : "focus:ring-blue-500"}`}
             placeholder="Enter your email"
           />
-          {validationError.email && (
-            <p className="text-red-500 text-sm mb-4">{validationError.email}</p>
-          )}
+          {validationError.email && <p className="text-red-500 text-sm mb-4">{validationError.email}</p>}
 
-          {/* Password Input */}
-          <label className="block mb-2 font-semibold text-gray-700" htmlFor="password">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            className={`w-full px-4 py-2 mb-2 border rounded-lg focus:outline-none focus:ring-2 ${
-              validationError.password ? "border-red-500" : "focus:ring-blue-500"
-            }`}
-            placeholder="Enter your password"
-          />
-          {validationError.password && (
-            <p className="text-red-500 text-sm mb-4">{validationError.password}</p>
-          )}
+          <label className="block mb-2 font-semibold text-gray-700">Password</label>
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className={`w-full px-4 py-2 mb-2 border rounded-lg focus:ring-2 ${validationError.password ? "border-red-500" : "focus:ring-blue-500"}`}
+              placeholder="Enter your password"
+            />
+            <button
+              type="button"
+              className="absolute right-3 top-3 text-gray-600"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+          {validationError.password && <p className="text-red-500 text-sm mb-4">{validationError.password}</p>}
 
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-          >
+          <button type="submit" className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
             Sign Up
           </button>
         </form>
 
-        {/* OR Divider */}
-        <div className="flex items-center justify-center my-4">
-          <div className="border-t border-gray-300 w-1/3"></div>
-          <p className="mx-2 text-gray-600 text-sm">OR</p>
-          <div className="border-t border-gray-300 w-1/3"></div>
-        </div>
-
-        
-
-        {/* Login Link */}
         <p className="text-center text-sm text-gray-600 mt-4">
-          Already have an account?{" "}
-          <Link to="/Login" className="text-blue-500 hover:underline font-medium">
-            Login
-          </Link>
+          Already have an account? <Link to="/Login" className="text-blue-500 hover:underline font-medium">Login</Link>
         </p>
       </div>
     </div>

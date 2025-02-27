@@ -1,167 +1,83 @@
 import React, { useState, useEffect } from "react";
-import { FaUser, FaSearch } from "react-icons/fa";
+import { FaUser, FaSearch, FaTachometerAlt, FaSignOutAlt } from "react-icons/fa";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../Images/logo_crowdfund.jpg";
 
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [userName, setUserName] = useState(""); 
+    const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const [userName, setUserName] = useState(localStorage.getItem("userName") || ""); 
     const navigate = useNavigate();
     const location = useLocation(); 
 
-    // Function to toggle the menu visibility
-    const toggleMenu = () => {
-        setMenuOpen(!menuOpen);
-    };
+    const toggleMenu = () => setMenuOpen(!menuOpen);
+    const toggleUserMenu = () => setUserMenuOpen(!userMenuOpen);
 
-    // Update username when localStorage changes
+    // Update username dynamically when user logs in
     useEffect(() => {
         const updateUser = () => {
             setUserName(localStorage.getItem("userName") || "");
         };
-
-        window.addEventListener("storage", updateUser);
-        updateUser(); // Initial check
-
-        return () => window.removeEventListener("storage", updateUser);
+    
+        window.addEventListener("userLoggedIn", updateUser);
+        
+        return () => window.removeEventListener("userLoggedIn", updateUser);
     }, []);
+    
 
     // Logout function
     const handleLogout = () => {
         localStorage.removeItem("userName");
         setUserName(""); 
-        window.dispatchEvent(new Event("storage")); // Notify all components
+        setUserMenuOpen(false);
         navigate("/login");
     };
 
-    // Function to dynamically apply active class based on the current page
-    const getLinkClass = (path) => {
-        return location.pathname === path
-            ? "text-teal-600 font-bold"
-            : "text-gray-700 hover:text-teal-600";
-    };
+    // Active link styling
+    const getLinkClass = (path) => (
+        location.pathname === path ? "text-teal-600 font-bold" : "text-gray-700 hover:text-teal-600"
+    );
 
     return (
         <header className="bg-ivory shadow-md">
             <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-                {/* Logo Section */}
                 <div className="flex items-center space-x-4">
-                    <img
-                        src={logo}
-                        alt="Logo"
-                        className="w-12 h-12 object-cover rounded-full"
-                    />
-                    <h1 className="text-2xl font-bold text-gray-700 tracking-wide">
-                        Crowdfund
-                    </h1>
+                    <img src={logo} alt="Logo" className="w-12 h-12 object-cover rounded-full" />
+                    <h1 className="text-2xl font-bold text-gray-700 tracking-wide">Crowdfund</h1>
                 </div>
 
-                {/* Search Bar */}
                 <div className="relative flex-1 mx-6 hidden md:block">
-                    <input
-                        type="text"
-                        placeholder="Search fundraisers..."
-                        className="w-full px-4 py-2 rounded-full border border-gray-300 focus:ring-2 focus:ring-teal-400 focus:outline-none"
-                    />
+                    <input type="text" placeholder="Search fundraisers..." className="w-full px-4 py-2 rounded-full border border-gray-300 focus:ring-2 focus:ring-teal-400 focus:outline-none" />
                     <FaSearch className="absolute top-2 right-4 text-gray-500 text-xl" />
                 </div>
 
-                {/* Navigation */}
                 <nav className="hidden md:flex items-center space-x-6">
-                    <Link to="/Home" className={`text-lg font-medium transition ${getLinkClass("/Home")}`}>
-                        Home
-                    </Link>
-                    <Link to="/donate" className={`text-lg font-medium transition ${getLinkClass("/donate")}`}>
-                        Donate
-                    </Link>
-                    <Link to="/ContactUs" className={`text-lg font-medium transition ${getLinkClass("/ContactUs")}`}>
-                        Contact Us
-                    </Link>
-                    <Link to="/start-fundraiser" className="bg-white text-teal-600 px-4 py-2 rounded-full font-bold shadow-md hover:bg-teal-400 hover:text-white transition">
-                        Start a Fundraiser
-                    </Link>
+                    <Link to="/Home" className={`text-lg font-medium transition ${getLinkClass("/Home")}`}>Home</Link>
+                    <Link to="/donate" className={`text-lg font-medium transition ${getLinkClass("/donate")}`}>Donate</Link>
+                    <Link to="/ContactUs" className={`text-lg font-medium transition ${getLinkClass("/ContactUs")}`}>Contact Us</Link>
+                    <Link to="/start-fundraiser" className="bg-white text-teal-600 px-4 py-2 rounded-full font-bold shadow-md hover:bg-teal-400 hover:text-white transition">Start a Fundraiser</Link>
 
-                    {/* If user is logged in, show Name and Logout button */}
                     {userName ? (
-                        <div className="flex items-center space-x-4">
-                            <span className="text-gray-700 text-lg font-medium">
-                                Welcome, {userName}
-                            </span>
-                            <button
-                                onClick={handleLogout}
-                                className="bg-red-500 text-white px-3 py-2 rounded-full shadow-md hover:bg-red-600 transition"
-                            >
-                                Logout
+                        <div className="relative">
+                            <button onClick={toggleUserMenu} className="flex items-center space-x-2 bg-gray-200 px-3 py-2 rounded-full shadow-md hover:bg-gray-300 transition">
+                                <span className="text-gray-700 text-lg font-medium">Welcome, {userName}</span>
                             </button>
+                            {userMenuOpen && (
+                                <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md overflow-hidden z-50">
+                                    <Link to="/UserDashboard" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"><FaTachometerAlt className="mr-2" /> My Dashboard</Link>
+                                    <Link to="/UserProfile" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"><FaUser className="mr-2" /> My Profile</Link>
+                                    <button onClick={handleLogout} className="flex items-center w-full px-4 py-2 text-red-600 hover:bg-gray-100"><FaSignOutAlt className="mr-2" /> Logout</button>
+                                </div>
+                            )}
                         </div>
                     ) : (
-                        // Show Login/Signup buttons if user is not logged in
                         <div className="flex items-center space-x-4">
-                            <Link to="/login" className="flex items-center bg-teal-400 text-white px-3 py-2 rounded-full shadow-md hover:bg-teal-500 transition">
-                                <FaUser className="mr-2" />
-                                Login
-                            </Link>
-                            <Link to="/signup" className="flex items-center bg-teal-400 text-white px-3 py-2 rounded-full shadow-md hover:bg-teal-500 transition">
-                                <FaUser className="mr-2" />
-                                Signup
-                            </Link>
+                            <Link to="/login" className="flex items-center bg-teal-400 text-white px-3 py-2 rounded-full shadow-md hover:bg-teal-500 transition"><FaUser className="mr-2" />Login</Link>
+                            <Link to="/signup" className="flex items-center bg-teal-400 text-white px-3 py-2 rounded-full shadow-md hover:bg-teal-500 transition"><FaUser className="mr-2" />Signup</Link>
                         </div>
                     )}
                 </nav>
-
-                {/* Mobile Menu Button */}
-                <div className="md:hidden flex items-center ml-4">
-                    <button onClick={toggleMenu} className="flex flex-col space-y-2" aria-label="Toggle mobile menu">
-                        <div className={`h-1 w-6 bg-teal-500 rounded-lg transition-transform duration-300 ${menuOpen ? "rotate-45 translate-y-2" : ""}`}></div>
-                        <div className={`h-1 w-6 bg-teal-500 rounded-lg transition-opacity duration-300 ${menuOpen ? "opacity-0" : ""}`}></div>
-                        <div className={`h-1 w-6 bg-teal-500 rounded-lg transition-transform duration-300 ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`}></div>
-                    </button>
-                </div>
             </div>
-
-            {/* Mobile Menu */}
-            {menuOpen && (
-                <div className="md:hidden bg-ivory p-4 space-y-4">
-                    <Link to="/Home" className={`block text-lg transition ${getLinkClass("/Home")}`} onClick={() => setMenuOpen(false)}>
-                        Home
-                    </Link>
-                    <Link to="/donate" className={`block text-lg transition ${getLinkClass("/donate")}`} onClick={() => setMenuOpen(false)}>
-                        Donate
-                    </Link>
-                    <Link to="/ContactUs" className={`block text-lg transition ${getLinkClass("/ContactUs")}`} onClick={() => setMenuOpen(false)}>
-                        Contact Us
-                    </Link>
-                    <Link to="/start-fundraiser" className="block bg-white text-teal-600 px-4 py-2 rounded-full font-bold shadow-md hover:bg-teal-400 hover:text-white transition" onClick={() => setMenuOpen(false)}>
-                        Start a Fundraiser
-                    </Link>
-
-                    {/* If user is logged in, show Name and Logout button */}
-                    {userName ? (
-                        <div className="flex flex-col space-y-2">
-                            <span className="text-gray-700 text-lg font-medium">
-                                Welcome, {userName}
-                            </span>
-                            <button
-                                onClick={() => { handleLogout(); setMenuOpen(false); }}
-                                className="bg-red-500 text-white px-3 py-2 rounded-full shadow-md hover:bg-red-600 transition"
-                            >
-                                Logout
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="flex flex-col space-y-2">
-                            <Link to="/login" className="flex items-center bg-teal-400 text-white px-3 py-2 rounded-full shadow-md hover:bg-teal-500 transition" onClick={() => setMenuOpen(false)}>
-                                <FaUser className="mr-2" />
-                                Login
-                            </Link>
-                            <Link to="/signup" className="flex items-center bg-teal-400 text-white px-3 py-2 rounded-full shadow-md hover:bg-teal-500 transition" onClick={() => setMenuOpen(false)}>
-                                <FaUser className="mr-2" />
-                                Signup
-                            </Link>
-                        </div>
-                    )}
-                </div>
-            )}
         </header>
     );
 };

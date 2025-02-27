@@ -13,7 +13,10 @@ import Home from "./Pages/Home";
 import TeamPage from "./Pages/TeamPage";
 import AboutUs from "./Pages/AboutUs";
 import ReviewSection from "./Pages/Review";
+import UserDashboard from "./Pages/UserDashboard";
+import UserProfile from "./Pages/UserProfile";
 import AdminDashboard from "./Pages/Admin";
+
 
 
 
@@ -54,6 +57,8 @@ const App = () => {
           <Route path="/TeamPage" element={<TeamPage/>} />
           <Route path="/AboutUS" element={<AboutUs/>} />
           <Route path="/ReviewSection" element={<ReviewSection/>} />
+          <Route path="/UserDashboard" element={<UserDashboard/>} />
+          <Route path="/UserProfile" element={<UserProfile/>} />
           <Route path="/AdminDashboard" element={<AdminDashboard/>} />
         </Routes>
       </div>
