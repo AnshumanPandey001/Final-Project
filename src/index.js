@@ -6,6 +6,10 @@ import reportWebVitals from './reportWebVitals';
 // import Login from './Pages/Login';
 // import Signup from './Pages/Signup';
 
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+/>
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

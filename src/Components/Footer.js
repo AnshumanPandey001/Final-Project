@@ -20,6 +20,7 @@ const Footer = () => {
               <li><Link to="/TeamPage">Team</Link></li>
               {/* <li><a href="#">Careers</a></li> */}
               <li><Link to="/contactUs">Contact</Link></li>
+              <li><Link to="/AdminLogin">Login for Admin</Link></li>
               {/* <li><Link to="/thank-you">Thank you</Link></li> */}
               {/* <li><a href="#">Resources</a></li> */}
             </ul>

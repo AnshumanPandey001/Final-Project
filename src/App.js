@@ -16,7 +16,8 @@ import ReviewSection from "./Pages/Review";
 import UserDashboard from "./Pages/UserDashboard";
 import UserProfile from "./Pages/UserProfile";
 import AdminDashboard from "./Pages/Admin";
-
+import PaymentPage from "./Components/PaymentPage";
+import AdminLogin from "./Pages/Admin_Login";
 
 
 
@@ -34,6 +35,7 @@ const App = () => {
       <div className="main-content">
         <Routes>
           {/* Default route should be Home */}
+          <Route path="/" element={<Home cards={cards} />} />
           <Route path="/Home" element={<Home cards={cards} />} />
          
 
@@ -60,6 +62,8 @@ const App = () => {
           <Route path="/UserDashboard" element={<UserDashboard/>} />
           <Route path="/UserProfile" element={<UserProfile/>} />
           <Route path="/AdminDashboard" element={<AdminDashboard/>} />
+          <Route path="/PaymentPage" element={<PaymentPage/>} />
+          <Route path="/AdminLogin" element={<AdminLogin/>} />
         </Routes>
       </div>
       <Footer />

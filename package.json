@@ -4,11 +4,14 @@
   "private": true,
   "proxy": "http://localhost:5271/",
   "dependencies": {
+    "@stripe/react-stripe-js": "^3.1.1",
+    "@stripe/stripe-js": "^5.7.0",
     "axios": "^1.7.9",
     "cra-template": "1.2.0",
     "framer-motion": "^12.4.7",
     "lottie-react": "^2.4.1",
     "lucide-react": "^0.475.0",
+    "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-confetti": "^6.2.3",
     "react-dom": "^19.0.0",
@@ -16,6 +19,7 @@
     "react-router-dom": "^7.1.1",
     "react-scripts": "5.0.1",
     "react-slick": "^0.30.3",
+    "react-toastify": "^11.0.5",
     "slick-carousel": "^1.8.1",
     "web-vitals": "^4.2.4"
   },

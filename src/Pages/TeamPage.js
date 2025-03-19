@@ -2,8 +2,9 @@ import React from "react";
 import introVideo from '../Images/intro-video.mp4';
 
 const teamMembers = [
+  { name: "Anshuman Pandey (Frontend)", image: "https://media.licdn.com/dms/image/v2/D4D03AQG1CqAXT22LPw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1714823551341?e=1745452800&v=beta&t=WVJEq1oW4TkfOE3jclqPXDqElMEmc1uJtnS77cFPJpo" },
+  { name: "Anshuman Pandey (Backend)", image: "https://media.licdn.com/dms/image/v2/D4D03AQG1CqAXT22LPw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1714823551341?e=1745452800&v=beta&t=WVJEq1oW4TkfOE3jclqPXDqElMEmc1uJtnS77cFPJpo" },
   { name: "Anshuman Pandey", image: "https://media.licdn.com/dms/image/v2/D4D03AQG1CqAXT22LPw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1714823551341?e=1745452800&v=beta&t=WVJEq1oW4TkfOE3jclqPXDqElMEmc1uJtnS77cFPJpo" },
-
 ];
 
 const TeamPage = () => {
