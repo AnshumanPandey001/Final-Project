@@ -200,54 +200,68 @@ const Header = () => {
             {/* Mobile Menu (Dropdown) */}
             {menuOpen && (
                 <>
-                    <div className="fixed inset-0 bg-black opacity-50 z-40"></div>
-                    <div className="absolute top-16 left-0 w-full bg-white shadow-md md:hidden z-50 transition-all transform ease-in-out duration-300">
+                    <div
+                        className="fixed inset-0 bg-black opacity-50 z-40"
+                        onClick={toggleMenu}
+                    ></div>
+                    <div
+                        className="fixed top-0 left-0 h-full w-64 bg-white shadow-md z-50 transform transition-transform ease-in-out duration-300"
+                        style={{
+                            transform: menuOpen ? "translateX(0)" : "translateX(-100%)",
+                        }}
+                    >
                         <div className="flex justify-between items-center p-4 border-b">
-                            <h2 className="text-xl font-bold">Menu</h2>
-                            <button onClick={toggleMenu} className="text-2xl text-gray-700">
+                            <h2 className="text-xl font-bold text-gray-800">Menu</h2>
+                            <button
+                                onClick={toggleMenu}
+                                className="text-2xl text-gray-700 focus:outline-none"
+                            >
                                 <FaTimes />
                             </button>
                         </div>
-                        <nav className="flex flex-col items-center space-y-4 py-4">
+
+                        {/* Mobile Menu Links */}
+                        <nav className="flex flex-col space-y-4 p-4">
                             <Link
                                 to="/Home"
-                                className={`text-lg font-medium ${getLinkClass("/Home")}`}
+                                className={`text-lg font-medium ${getLinkClass("/Home")} hover:text-teal-600 transition-colors`}
                                 onClick={handleLinkClick}
                             >
                                 Home
                             </Link>
                             <Link
                                 to="/donate"
-                                className={`text-lg font-medium ${getLinkClass("/donate")}`}
+                                className={`text-lg font-medium ${getLinkClass("/donate")} hover:text-teal-600 transition-colors`}
                                 onClick={handleLinkClick}
                             >
                                 Donate
                             </Link>
                             <Link
                                 to="/ContactUs"
-                                className={`text-lg font-medium ${getLinkClass("/ContactUs")}`}
+                                className={`text-lg font-medium ${getLinkClass("/ContactUs")} hover:text-teal-600 transition-colors`}
                                 onClick={handleLinkClick}
                             >
                                 Contact Us
                             </Link>
                             <Link
                                 to="/start-fundraiser"
-                                className="bg-white text-teal-600 px-4 py-2 rounded-full font-bold shadow-md hover:bg-teal-400 hover:text-white transition"
+                                className="bg-teal-600 text-white px-6 py-2 rounded-full font-bold shadow-md hover:bg-teal-700 transition-colors text-center"
                                 onClick={handleLinkClick}
                             >
                                 Start a Fundraiser
                             </Link>
 
                             {userName ? (
-                                <div className="relative mt-4">
+                                <div className="mt-4">
                                     <button
                                         onClick={toggleUserMenu}
-                                        className="flex items-center space-x-2 bg-gray-200 px-3 py-2 rounded-full shadow-md hover:bg-gray-300 transition"
+                                        className="w-full flex items-center justify-between bg-gray-200 px-4 py-2 rounded-full shadow-md hover:bg-gray-300 transition"
                                     >
                                         <span className="text-gray-700 text-lg font-medium">Welcome, {userName}</span>
+                                        <FaUser className="text-gray-700" />
                                     </button>
                                     {userMenuOpen && (
-                                        <div className="absolute mt-2 w-full bg-white shadow-lg rounded-md overflow-hidden">
+                                        <div className="mt-2 bg-white shadow-lg rounded-md overflow-hidden">
                                             <Link
                                                 to="/UserDashboard"
                                                 className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
@@ -270,16 +284,16 @@ const Header = () => {
                                     )}
                                 </div>
                             ) : (
-                                <div className="flex items-center space-x-4 mt-4">
+                                <div className="flex flex-col space-y-4 mt-4">
                                     <Link
                                         to="/login"
-                                        className="flex items-center bg-teal-400 text-white px-3 py-2 rounded-full shadow-md hover:bg-teal-500 transition"
+                                        className="flex items-center justify-center bg-teal-400 text-white px-6 py-2 rounded-full shadow-md hover:bg-teal-500 transition"
                                     >
                                         <FaUser className="mr-2" /> Login
                                     </Link>
                                     <Link
                                         to="/signup"
-                                        className="flex items-center bg-teal-400 text-white px-3 py-2 rounded-full shadow-md hover:bg-teal-500 transition"
+                                        className="flex items-center justify-center bg-teal-400 text-white px-6 py-2 rounded-full shadow-md hover:bg-teal-500 transition"
                                     >
                                         <FaUser className="mr-2" /> Signup
                                     </Link>

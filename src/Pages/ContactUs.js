@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -7,9 +9,8 @@ const ContactUs = () => {
     message: "",
   });
 
-  const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
-  const [showPopup, setShowPopup] = useState(false); // To control the popup visibility
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,30 +20,46 @@ const ContactUs = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.name && formData.email && formData.message) {
-      // Simulating form submission
-      console.log("Form Submitted", formData);
-      setSuccess("Thank you for reaching out! We'll get back to you soon.");
-      setError("");
-      setFormData({ name: "", email: "", message: "" });
-      setShowPopup(true); // Show the popup when form is submitted
-    } else {
+    
+    if (!formData.name || !formData.email || !formData.message) {
       setError("All fields are required.");
-      setSuccess("");
+      return;
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError("");
+
+    try {
+      const response = await fetch('http://localhost:5271/api/ContactUs/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to send message');
+      }
+
+      toast.success("Thank you for reaching out! We'll get back to you soon.");
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast.error(error.message || "Something went wrong. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
-
-  // Fade-in effect for the popup success message
-  useEffect(() => {
-    if (showPopup) {
-      const timer = setTimeout(() => {
-        setShowPopup(false); // Hide the popup after 5 seconds
-      }, 2000); // Popup stays for 5 seconds
-      return () => clearTimeout(timer);
-    }
-  }, [showPopup]);
 
   return (
     <main className="min-h-screen flex items-center justify-center py-8 bg-gray-50">
@@ -116,27 +133,33 @@ const ContactUs = () => {
             ></textarea>
           </div>
 
-          {/* Success/Error Messages */}
+          {/* Error Message */}
           {error && <p className="text-red-500 text-sm mb-4 text-center">{error}</p>}
 
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300 ease-in-out"
+            disabled={isSubmitting}
+            className={`w-full py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300 ease-in-out ${
+              isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+            }`}
           >
-            Submit
+            {isSubmitting ? 'Sending...' : 'Submit'}
           </button>
         </form>
       </div>
 
-      {/* Success Popup */}
-      {showPopup && (
-        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center z-50 bg-opacity-50 bg-gray-700">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-xs mx-auto animate__animated animate__fadeIn animate__delay-1s">
-            <p className="text-center text-green-500 font-semibold">{success}</p>
-          </div>
-        </div>
-      )}
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </main>
   );
 };

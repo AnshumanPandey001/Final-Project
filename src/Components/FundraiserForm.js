@@ -7,23 +7,23 @@ import "react-toastify/dist/ReactToastify.css";
 const FundraiserForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    beneficiarytype: "", // Beneficiary Type
-    individualorgroup: "", // Individual or Group
-    causetype: "", // Cause Type
-    displayPhotos: [], // For file uploads
-    name: "", // Name
-    age: "", // Age
-    gender: "", // Gender
-    relationship: "", // Relationship
-    residence: "", // Residence
-    mobilenumber: "", // Mobile Number
-    hospitalname: "", // Hospital Name
-    location: "", // Location
-    city: "", // City
-    amount: "", // Amount
-    fundraisername: "", // Fundraiser Name
-    beneficiaryname: "", // Beneficiary Name
-    story: "", // Story
+    beneficiarytype: "", 
+    individualorgroup: "", 
+    causetype: "", 
+    displayPhotos: [], 
+    name: "", 
+    age: "", 
+    gender: "", 
+    relationship: "", 
+    residence: "", 
+    mobilenumber: "", 
+    hospitalname: "", 
+    location: "", 
+    city: "",
+    amount: "", 
+    fundraisername: "", 
+    beneficiaryname: "",
+    story: "", 
   });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -272,7 +272,7 @@ const FundraiserForm = () => {
       {/* Display Photos */}
       <div className="mb-6">
         <label className="block text-[#4A4A4A] mb-2">
-          Display Photos (Select multiple images)
+          Display Photos (Upload multiple images includes Profile Photo,Documents)
           <input
             type="file"
             name="displayPhotos"
@@ -356,7 +356,7 @@ const FundraiserForm = () => {
       {/* Relationship */}
       <div className="mb-6">
         <label className="block text-[#4A4A4A] mb-2">
-          Relationship
+          Relationship (Put NA if nothing)
           <input
             type="text"
             name="relationship"

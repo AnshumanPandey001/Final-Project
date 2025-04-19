@@ -6,10 +6,20 @@ import reportWebVitals from './reportWebVitals';
 // import Login from './Pages/Login';
 // import Signup from './Pages/Signup';
 
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-/>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your App</title>
+  
+  
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -1,11 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram, FaYoutube } from "react-icons/fa";
-// import ReviewSection from "../Pages/Review";
+import Payment_img from "../Images/payment_img.jpg";
 
 const Footer = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
+
   return (
     <footer className="bg-gray-800 text-white py-8">
       <div className="max-w-7xl mx-auto px-4 text-center">
@@ -16,13 +17,9 @@ const Footer = () => {
             <h3 className="font-semibold">About</h3>
             <ul className="text-gray-400">
               <li><Link to="/AboutUs">About us</Link></li>
-              {/* <li><a href="#">Press and media</a></li> */}
               <li><Link to="/TeamPage">Team</Link></li>
-              {/* <li><a href="#">Careers</a></li> */}
               <li><Link to="/contactUs">Contact</Link></li>
               <li><Link to="/AdminLogin">Login for Admin</Link></li>
-              {/* <li><Link to="/thank-you">Thank you</Link></li> */}
-              {/* <li><a href="#">Resources</a></li> */}
             </ul>
           </div>
 
@@ -39,12 +36,13 @@ const Footer = () => {
           {/* Payment Support */}
           <div>
             <h3 className="font-semibold">Supported by</h3>
-            {/* <div className="flex space-x-2 mt-2">
-              <img src="visa-logo.png" alt="Visa" className="h-6" />
-              <img src="mastercard-logo.png" alt="MasterCard" className="h-6" />
-              <img src="paytm-logo.png" alt="Paytm" className="h-6" />
-              <img src="amex-logo.png" alt="American Express" className="h-6" />
-            </div> */}
+            <div className="mt-2">
+              <img 
+                src={Payment_img}
+                alt="Supported by Visa, MasterCard, Paytm, and American Express"
+                className="h-auto w-full max-w-xs mx-auto"
+              />
+            </div>
           </div>
         </div>
 
