@@ -84,7 +84,7 @@ const Donate = () => {
               {/* Donate Button */}
               <button
         className="bg-[#14b8a6] text-white px-6 py-3 mt-6 rounded-full w-full"
-        onClick={() => navigate("/PaymentPage", { state: { fundraiser } })}
+        onClick={() => navigate("fundraiser-details", { state: { fundraiser } })}
       >
         Donate
       </button>

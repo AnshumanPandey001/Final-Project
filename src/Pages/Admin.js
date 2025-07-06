@@ -76,18 +76,14 @@ const AdminPanel = () => {
 };
 
 const ManageUsers = () => {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    axios.get("http://localhost:5271/api/users")
-      .then(response => setUsers(response.data))
-      .catch(error => console.error("Error fetching users", error));
-  }, []);
+  const [users, setUsers] = useState([
+    { id: 1, name: "Alice Johnson", email: "alice@example.com", isActive: true },
+    { id: 2, name: "Bob Smith", email: "bob@example.com", isActive: false },
+    { id: 3, name: "Charlie Brown", email: "charlie@example.com", isActive: true },
+  ]);
 
   const deleteUser = (id) => {
-    axios.delete(`http://localhost:5271/api/users/${id}`)
-      .then(() => setUsers(users.filter(user => user.id !== id)))
-      .catch(error => console.error("Error deleting user", error));
+    setUsers(users.filter(user => user.id !== id));
   };
 
   return (
@@ -127,11 +123,11 @@ const ManageUsers = () => {
 };
 
 const ManagePayments = () => {
-  return <div><h2 className="text-xl font-bold mb-3">Manage Payments</h2></div>;
+  return <div><h2 className="text-xl font-bold mb-3">Manage Payments</h2><p>Showing dummy payment records for audit purposes.</p></div>;
 };
 
 const ManageCards = () => {
-  return <div><h2 className="text-xl font-bold mb-3">Manage Cards</h2></div>;
+  return <div><h2 className="text-xl font-bold mb-3">Manage Cards</h2><p>Displaying sample card info, secured and anonymized.</p></div>;
 };
 
 export default AdminPanel;

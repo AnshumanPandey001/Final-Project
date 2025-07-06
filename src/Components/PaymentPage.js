@@ -16,7 +16,7 @@ const CheckoutForm = () => {
   const [fundraiser, setFundraiser] = useState(null);
   const [donationTotal, setDonationTotal] = useState(0);
 
-  const validFundraiserIds = [13, 14, 15, 16, 19, 17, 18, 20, 21, 22, 23, 24, 25, 26, 28, 27, 29, 30, 31, 32];
+  const validFundraiserIds = [34, 35, 38, 36, 37, 40, 39, 41, 42, 45, 43, 44, 46, 48, 47, 49, 50, 53, 51, 52, 55, 54, 56, 58, 57, 59, 61, 60, 62, 63, 65, 64, 66, 68, 67, 69, 70, 72, 71, 74, 73, 75, 77, 76, 78, 80, 79, 81, 82, 84, 83, 85, 86, 88, 87, 90, 89, 91, 93, 92, 94, 95, 96, 97, 99, 98, 100];
 
   useEffect(() => {
     const fetchData = async () => {

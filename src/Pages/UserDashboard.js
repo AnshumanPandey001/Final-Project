@@ -3,53 +3,43 @@ import React, { useEffect, useState } from "react";
 const UserDashboard = () => {
   // Dummy data for preview
   const dummyUser = {
-    name: "John Doe",
-    latestContribution: "Rs.500",
+    name: "Anshu Pandey",
+    latestContribution: "Rs.1000",
     impactAreas: "Health, Education",
     // Withdrawals data
     withdrawals: [
       {
-        title: "Support Dv",
-        imageText: "help.png", // Or any dummy image path
-        raised: 0,
-        withdrawal: 0,
+        title: "Support for DV",
+        imageText: "Help",
+        raised: 3000,
+        withdrawal: 1500,
       },
-      // Add more withdrawals if needed
     ],
     // Fundraisers data
     fundraisers: [
       {
-        imageText: "Help",
-        title: "Fundraiser for Health",
-        slug: "fundraiser-for-health",
-        raised: 5000,
+        imageText: "Care",
+        title: "Fundraiser for Health Checkups",
+        slug: "health-checkups-fundraiser",
+        raised: 7500,
         goal: 10000,
-        daysLeft: 10,
+        daysLeft: 12,
       },
       {
-        imageText: "Aid",
-        title: "Aid for Education",
-        slug: "aid-for-education",
-        raised: 2000,
+        imageText: "Edu",
+        title: "Books for Underprivileged Kids",
+        slug: "books-donation-drive",
+        raised: 4000,
         goal: 8000,
-        daysLeft: 15,
+        daysLeft: 8,
       },
     ],
   };
 
-  // Local state
   const [user, setUser] = useState(null);
-  const [activeTab, setActiveTab] = useState("withdrawals"); // Default to 'withdrawals' tab
+  const [activeTab, setActiveTab] = useState("withdrawals");
 
   useEffect(() => {
-    // Uncomment and adjust the fetch to load real data from your backend:
-    /*
-    fetch("http://localhost:5000/api/user-dashboard")
-      .then((response) => response.json())
-      .then((data) => setUser(data))
-      .catch((error) => console.error("Error fetching user data:", error));
-    */
-
     // For preview purposes, using dummy data:
     setUser(dummyUser);
   }, []);
@@ -102,10 +92,9 @@ const UserDashboard = () => {
         </button>
       </div>
 
-      {/* Content based on Active Tab */}
+      {/* Content */}
       {activeTab === "withdrawals" ? (
         <div className="mt-4 bg-white shadow-md p-6 rounded-md">
-          {/* My Withdrawals Table */}
           <table className="w-full text-left border-collapse">
             <thead>
               <tr>
@@ -115,16 +104,13 @@ const UserDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {user.withdrawals && user.withdrawals.length > 0 ? (
+              {user.withdrawals.length > 0 ? (
                 user.withdrawals.map((item, index) => (
                   <tr key={index}>
                     <td className="py-2 px-4 border-b">
                       <div className="flex items-center space-x-3">
-                        {/* Dummy image area */}
-                        <div className="w-16 h-16 bg-red-300 flex items-center justify-center rounded-md">
-                          <span className="text-white font-semibold">
-                            {item.title}
-                          </span>
+                        <div className="w-16 h-16 bg-red-300 flex items-center justify-center rounded-md text-white font-semibold">
+                          {item.imageText}
                         </div>
                         <span>{item.title}</span>
                       </div>
@@ -147,14 +133,11 @@ const UserDashboard = () => {
         </div>
       ) : (
         <div className="mt-4 bg-white shadow-md p-6 rounded-md">
-          {/* My Fundraisers List */}
-          {user.fundraisers && user.fundraisers.length > 0 ? (
+          {user.fundraisers.length > 0 ? (
             user.fundraisers.map((fundraiser, index) => (
               <div key={index} className="flex items-center space-x-4 mb-4">
-                <div className="w-24 h-24 bg-red-300 flex items-center justify-center rounded-md">
-                  <span className="text-white font-semibold">
-                    {fundraiser.imageText}
-                  </span>
+                <div className="w-24 h-24 bg-red-300 flex items-center justify-center rounded-md text-white font-semibold">
+                  {fundraiser.imageText}
                 </div>
                 <div className="flex-1">
                   <h2 className="text-xl font-semibold">{fundraiser.title}</h2>

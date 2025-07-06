@@ -5,20 +5,21 @@ const FundraiserCards = () => {
     const [fundraisers, setFundraisers] = useState([]);
     const [donationTotals, setDonationTotals] = useState({});
     const [imageIndices, setImageIndices] = useState([]);
+    const [dummyRaisedAmounts, setDummyRaisedAmounts] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const location = useLocation();
     const placeholderImage = "https://via.placeholder.com/300x200.png?text=No+Image";
 
-    // Handle navigation state from PaymentPage
+    const getRandomAmount = () => Math.floor(Math.random() * (50000 - 5000 + 1)) + 5000;
+
     useEffect(() => {
         if (location.state?.fundraiser && location.state?.refresh) {
             const updatedFundraiser = location.state.fundraiser;
-            console.log("Received updated fundraiser from navigation:", updatedFundraiser);
             setFundraisers(prev =>
                 prev.map(f =>
                     f.id === updatedFundraiser.id ? { ...f, raisedAmount: updatedFundraiser.raisedAmount } : f
-                ) || [updatedFundraiser] // Fallback if prev is empty
+                ) || [updatedFundraiser]
             );
             setDonationTotals(prev => ({
                 ...prev,
@@ -27,11 +28,9 @@ const FundraiserCards = () => {
         }
     }, [location.state]);
 
-    // Listen for payment success events
     useEffect(() => {
         const handlePaymentSuccess = (event) => {
             const { fundraiserId, amount } = event.detail;
-            console.log("Payment success event received:", { fundraiserId, amount });
             setDonationTotals(prev => ({
                 ...prev,
                 [fundraiserId]: (prev[fundraiserId] || 0) + amount,
@@ -42,26 +41,25 @@ const FundraiserCards = () => {
         return () => window.removeEventListener('paymentSuccess', handlePaymentSuccess);
     }, []);
 
-    // Fetch initial data with delay to allow mock updates to take precedence
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
                 setError(null);
 
-                // Fetch fundraisers
                 const fundraisersResponse = await fetch("http://localhost:5271/api/Fundraiser");
                 if (!fundraisersResponse.ok) {
                     throw new Error(`Failed to fetch fundraisers: ${fundraisersResponse.statusText}`);
                 }
                 const fundraisersData = await fundraisersResponse.json();
-                console.log("Fetched fundraisers data:", fundraisersData);
-                setFundraisers(Array.isArray(fundraisersData) ? fundraisersData : []);
+                const validFundraisers = Array.isArray(fundraisersData) ? fundraisersData : [];
+                setFundraisers(validFundraisers);
 
-                // Fetch donations
                 const totals = {};
+                const dummyMap = {};
+
                 await Promise.all(
-                    fundraisersData.map(async (fundraiser) => {
+                    validFundraisers.map(async (fundraiser) => {
                         try {
                             const donationsResponse = await fetch(
                                 `http://localhost:5271/api/Payments/fundraiser/${fundraiser.id}?t=${Date.now()}`
@@ -78,30 +76,26 @@ const FundraiserCards = () => {
                             console.error(`Error fetching donations for fundraiser ${fundraiser.id}:`, err);
                             totals[fundraiser.id] = 0;
                         }
+
+                        dummyMap[fundraiser.id] = getRandomAmount();
                     })
                 );
 
-                // Merge with existing donation totals to preserve mock payments
-                setDonationTotals(prev => ({
-                    ...prev,
-                    ...totals,
-                }));
+                setDonationTotals(prev => ({ ...prev, ...totals }));
+                setDummyRaisedAmounts(dummyMap);
             } catch (err) {
                 console.error("Fetch error:", err);
                 setError(`Error loading fundraisers: ${err.message}`);
-                // Fallback with a default fundraiser if fetch fails
                 setFundraisers([{ id: "temp", title: "Test Fundraiser", amount: 3998, raisedAmount: "0", beneficiaryName: "aman", location: "andheri" }]);
             } finally {
                 setLoading(false);
             }
         };
 
-        // Delay fetch to allow navigation state to apply first
         const delay = setTimeout(fetchData, 1000);
         return () => clearTimeout(delay);
     }, []);
 
-    // Image carousel effect
     useEffect(() => {
         if (fundraisers.length === 0) return;
 
@@ -153,7 +147,7 @@ const FundraiserCards = () => {
             <div className="text-center p-8">
                 <p className="text-gray-500">No fundraisers available.</p>
                 <Link
-                    to="/create-fundraiser"
+                    to="/start-fundraiser"
                     className="inline-block mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
                 >
                     Create New Fundraiser
@@ -165,7 +159,8 @@ const FundraiserCards = () => {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
             {fundraisers.map((fundraiser, index) => {
-                const raisedAmount = donationTotals[fundraiser.id] || parseFloat(fundraiser.raisedAmount) || 0;
+                const realRaisedAmount = donationTotals[fundraiser.id] || parseFloat(fundraiser.raisedAmount) || 0;
+                const raisedAmount = dummyRaisedAmounts[fundraiser.id] || 0; // dummy value shown in UI
                 const goalAmount = fundraiser.amount || 1;
                 const raisedPercentage = Math.min((raisedAmount / goalAmount) * 100, 100).toFixed(0);
                 const images = fundraiser.displayPhotosPath ? fundraiser.displayPhotosPath.split(",") : [];
